@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
 
 namespace Identity.Controllers
@@ -52,16 +53,17 @@ namespace Identity.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
             if (_signInManager.IsSignedIn(User))
                 return RedirectToAction("Index", "Home");
 
+            ViewData["returnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model , string returnUrl = null)
         {
             if (_signInManager.IsSignedIn(User))
                 return RedirectToAction("Index", "Home");
@@ -74,6 +76,9 @@ namespace Identity.Controllers
 
             if(result.Succeeded)
             {
+                if (string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    return Redirect(returnUrl);
+
                 return RedirectToAction("Index", "Home");
             }
             if (result.IsLockedOut)
