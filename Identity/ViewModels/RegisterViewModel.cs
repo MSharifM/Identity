@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Identity.ViewModels
 {
@@ -6,11 +7,13 @@ namespace Identity.ViewModels
     {
         [Required]
         [Display(Name = "نام کاربری")]
+        [Remote("IsUserNameInUse", "Account")] // action method , controller
         public string UserName { get; set; }
 
         [Required]
         [Display(Name = "ایمیل")]
         [EmailAddress]
+        [Remote("IsEmailInUse", "Account")] 
         public string Email { get; set; }
 
         [Required]

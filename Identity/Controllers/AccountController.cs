@@ -101,5 +101,23 @@ namespace Identity.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task<IActionResult> IsEmailInUse(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+                return Json(true);
+
+            return Json("ایمیل تکراری است.");
+        }
+        
+        public async Task<IActionResult> IsUserNameInUse(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user is null)
+                return Json(true);
+
+            return Json("نام کاربری تکراری است.");
+        }
     }
 }
