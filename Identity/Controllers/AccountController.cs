@@ -63,10 +63,12 @@ namespace Identity.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model , string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             if (_signInManager.IsSignedIn(User))
                 return RedirectToAction("Index", "Home");
+
+            ViewData["returnUrl"] = returnUrl;
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -74,7 +76,7 @@ namespace Identity.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password
                 , model.RememberMe, true);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 if (string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     return Redirect(returnUrl);
@@ -94,9 +96,9 @@ namespace Identity.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LogOut()
+        public async Task<IActionResult> LogOut()
         {
-            _signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
     }

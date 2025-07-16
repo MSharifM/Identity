@@ -11,7 +11,19 @@ builder.Services.AddDbContext<AppDBContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"));
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredUniqueChars = 0;
+    options.Password.RequiredLength = 7;
+
+    options.User.RequireUniqueEmail = true;
+    options.User.AllowedUserNameCharacters = "!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:ZXCVBNM<>?1234567890-=qwertyuiopasdfghjkl;xcvbnm,.";
+
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+})
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
 
