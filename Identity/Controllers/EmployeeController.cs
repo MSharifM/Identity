@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Identity.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Identity.Models;
 
 namespace Identity.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly AppDBContext _context;
@@ -18,6 +15,7 @@ namespace Identity.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         // GET: Employee
         public async Task<IActionResult> Index()
         {
