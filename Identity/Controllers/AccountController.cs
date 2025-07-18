@@ -53,6 +53,7 @@ namespace Identity.Controllers
         }
 
         [HttpGet]
+        [Route("Login")]
         public IActionResult Login(string returnUrl = null)
         {
             if (_signInManager.IsSignedIn(User))
@@ -63,6 +64,7 @@ namespace Identity.Controllers
         }
 
         [HttpPost]
+        [Route("Login")]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             if (_signInManager.IsSignedIn(User))
@@ -78,7 +80,7 @@ namespace Identity.Controllers
 
             if (result.Succeeded)
             {
-                if (string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     return Redirect(returnUrl);
 
                 return RedirectToAction("Index", "Home");
@@ -122,6 +124,11 @@ namespace Identity.Controllers
                 return Json(true);
 
             return Json("نام کاربری تکراری است.");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
