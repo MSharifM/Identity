@@ -1,7 +1,9 @@
-﻿using Identity.ViewModels.ManageUser;
+﻿using Identity.Repositories;
+using Identity.ViewModels.ManageUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Identity.Controllers
 {
@@ -148,6 +150,22 @@ namespace Identity.Controllers
             await _userManager.DeleteAsync(user);
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddUserToClaim(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return NotFound();
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+            var allClaim = ClaimStore.AllClaims;
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            var validClaims =
+                allClaim.Where(c => userClaims.All(x => x.Type != c.Type))
+                    .Select(c => new ClaimsViewModel(c.Type)).ToList();
+
+            var model = new AddOrRemoveClaimViewModel(id, validClaims);
+            return View(model);
         }
     }
 }
