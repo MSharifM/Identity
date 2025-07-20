@@ -1,6 +1,7 @@
 ﻿using Identity.ViewModels.ManageUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Controllers
 {
@@ -61,19 +62,19 @@ namespace Identity.Controllers
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();
-            var roles = _roleManager.Roles.ToList();
-            var model = new AddUserToRoleViewModel() { UserId = id };
+            var roles = _roleManager.Roles.AsTracking().Select(r => r.Name).ToList();
 
-            foreach (var role in roles)
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var vaildRoles = roles.Where(r => !userRoles.Contains(r)).Select(r => new UserRolesViewModel()
             {
-                if (!await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    model.UserRoles.Add(new UserRolesViewModel()
-                    {
-                        RoleName = role.Name
-                    });
-                }
-            }
+                RoleName = r,
+            }).ToList();
+
+            var model = new AddUserToRoleViewModel()
+            {
+                UserId = id,
+                UserRoles = vaildRoles
+            };
 
             return View(model);
         }
@@ -106,19 +107,12 @@ namespace Identity.Controllers
             if (string.IsNullOrEmpty(id)) return NotFound();
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();
-            var roles = _roleManager.Roles.ToList();
-            var model = new AddUserToRoleViewModel() { UserId = id };
-
-            foreach (var role in roles)
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var validRoles = userRoles.Select(r => new UserRolesViewModel()
             {
-                if (await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    model.UserRoles.Add(new UserRolesViewModel()
-                    {
-                        RoleName = role.Name
-                    });
-                }
-            }
+                RoleName = r,
+            }).ToList();
+            var model = new AddUserToRoleViewModel() { UserId = id , UserRoles = validRoles};
 
             return View(model);
         }
