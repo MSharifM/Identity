@@ -12,11 +12,13 @@ namespace Identity.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public ManageUserController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public ManageUserController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -220,7 +222,11 @@ namespace Identity.Controllers
 
             var result = await _userManager.RemoveClaimsAsync(user, requestClaims);
 
-            if (result.Succeeded) return RedirectToAction("index");
+            if (result.Succeeded)
+            {
+                await _signInManager.SignOutAsync(); // Sign out user manually
+                return RedirectToAction("Login", "Account");
+            }
 
             foreach (var error in result.Errors)
             {

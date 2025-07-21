@@ -1,6 +1,8 @@
 using Identity.Models;
+using Identity.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,11 +29,18 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("EmployeeListPolicy", policy => policy
+        .RequireClaim(ClaimTypesStore.EmployeeList, true.ToString())
+        .RequireClaim(ClaimTypesStore.EmployeeDetails , true.ToString()));
+});
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
+
 
 var app = builder.Build();
 

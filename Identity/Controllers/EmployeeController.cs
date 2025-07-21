@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Controllers
 {
-    [Authorize(Roles ="Admin,Teacher")] //admin or teacher 
-
+    //[Authorize(Roles ="Admin,Teacher")] //admin or teacher 
     //[Authorize(Roles ="Admin")]
     //[Authorize(Roles ="Teacher")] => is admin and teacher
+    [Authorize(Policy ="EmployeeListPolicy")]
     public class EmployeeController : Controller
     {
         private readonly AppDBContext _context;
