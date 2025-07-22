@@ -34,6 +34,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("EmployeeListPolicy", policy => policy
         .RequireClaim(ClaimTypesStore.EmployeeList, true.ToString())
         .RequireClaim(ClaimTypesStore.EmployeeDetails , true.ToString()));
+    options.AddPolicy("ClaimOrRole", policy =>
+        policy.RequireAssertion(context =>
+            context.User.HasClaim(ClaimTypesStore.EmployeeList, true.ToString()) ||
+            context.User.IsInRole("Admin")
+            ));
 });
 builder.Services.ConfigureApplicationCookie(options =>
 {
