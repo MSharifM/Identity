@@ -1,5 +1,8 @@
 using Identity.Models;
 using Identity.Repositories;
+using Identity.Security.Default;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -34,12 +37,19 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("EmployeeListPolicy", policy => policy
         .RequireClaim(ClaimTypesStore.EmployeeList, true.ToString())
         .RequireClaim(ClaimTypesStore.EmployeeDetails , true.ToString()));
+
     options.AddPolicy("ClaimOrRole", policy =>
         policy.RequireAssertion(context =>
             context.User.HasClaim(ClaimTypesStore.EmployeeList, true.ToString()) ||
             context.User.IsInRole("Admin")
             ));
+
+    options.AddPolicy("ClaimRequirement", policy =>
+        policy.Requirements.Add(new ClaimRequirement(ClaimTypesStore.EmployeeList, true.ToString())
+        ));
 });
+
+builder.Services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Login";

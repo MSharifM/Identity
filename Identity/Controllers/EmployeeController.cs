@@ -9,7 +9,8 @@ namespace Identity.Controllers
     //[Authorize(Roles ="Admin")]
     //[Authorize(Roles ="Teacher")] => is admin and teacher
     //[Authorize(Policy ="EmployeeListPolicy")]
-    [Authorize(Policy = "ClaimOrRole")]
+    //[Authorize(Policy = "ClaimOrRole")]
+    [Authorize(Policy = "ClaimRequirement")]
     public class EmployeeController : Controller
     {
         private readonly AppDBContext _context;
