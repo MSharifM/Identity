@@ -14,7 +14,7 @@ namespace Identity.Models
         }
 
         public DbSet<Employee> Employees { get; set; }
-
+        public DbSet<SiteSettings> SiteSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
