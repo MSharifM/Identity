@@ -1,4 +1,4 @@
-﻿namespace Identity.ViewModels
+﻿namespace Identity.ViewModels.Role
 {
     public class RoleValidationGuidViewModel
     {

@@ -49,6 +49,7 @@ builder.Services.AddAuthorization(options =>
         ));
 });
 
+builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
 builder.Services.ConfigureApplicationCookie(options =>
 {

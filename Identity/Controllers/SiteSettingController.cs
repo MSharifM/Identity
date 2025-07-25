@@ -1,18 +1,21 @@
 ﻿using Humanizer;
 using Identity.Models;
-using Identity.ViewModels;
+using Identity.ViewModels.Role;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Identity.Controllers
 {
     public class SiteSettingController : Controller
     {
         private readonly AppDBContext _context;
+        private readonly IMemoryCache _memoryCache;
 
-        public SiteSettingController(AppDBContext context)
+        public SiteSettingController(AppDBContext context, IMemoryCache memoryCache)
         {
             _context = context;
+            _memoryCache = memoryCache;
         }
 
         public IActionResult Index()
@@ -57,6 +60,7 @@ namespace Identity.Controllers
                 _context.Update(roleValidationGuidSiteSetting);
             }
             _context.SaveChanges();
+            _memoryCache.Remove("RoleValidationGuid");
 
             return RedirectToAction("Index");
         }
