@@ -50,6 +50,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddMemoryCache();
+builder.Services.AddTransient<IUtilities, Utilities>();
 builder.Services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
 builder.Services.ConfigureApplicationCookie(options =>
 {

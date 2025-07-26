@@ -4,7 +4,7 @@ namespace Identity.Repositories
 {
     public interface IUtilities
     {
-        public IList<ActionAndControllerName> ActionAndControllerNamesList();
+        public IList<ActionAndControllerName> AreaAndActionAndControllerNamesList();
         public IList<string> GetAllAreasNames();
         public string DataBaseRoleValidationGuid();
     }
