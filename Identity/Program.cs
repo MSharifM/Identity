@@ -1,6 +1,7 @@
 using Identity.Models;
 using Identity.Repositories;
 using Identity.Security.Default;
+using Identity.Security.DynamicRole;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -47,10 +48,16 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ClaimRequirement", policy =>
         policy.Requirements.Add(new ClaimRequirement(ClaimTypesStore.EmployeeList, true.ToString())
         ));
+
+    options.AddPolicy("DynamicRole", policy =>
+        policy.Requirements.Add(new DynamicRoleRequirement()
+        ));
 });
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddTransient<IUtilities, Utilities>();
+builder.Services.AddScoped<IAuthorizationHandler, DynamicRoleHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
