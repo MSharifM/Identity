@@ -3,6 +3,7 @@ using Identity.Repositories;
 using Identity.Security.Default;
 using Identity.Security.DynamicRole;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -63,7 +64,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
+    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
 });
+
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.FromMinutes(30);
+})
 
 
 var app = builder.Build();
