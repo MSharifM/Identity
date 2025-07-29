@@ -1,4 +1,5 @@
-﻿using Identity.Repositories;
+﻿using Identity.Models;
+using Identity.Repositories;
 using Identity.ViewModels.ManageUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,11 @@ namespace Identity.Controllers
 {
     public class ManageUserController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<CustomizeUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<CustomizeUser> _signInManager;
 
-        public ManageUserController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<IdentityUser> signInManager)
+        public ManageUserController(UserManager<CustomizeUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<CustomizeUser> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;

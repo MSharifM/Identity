@@ -1,4 +1,4 @@
-using Identity.Models;
+﻿using Identity.Models;
 using Identity.Repositories;
 using Identity.Security.Default;
 using Identity.Security.DynamicRole;
@@ -18,7 +18,7 @@ builder.Services.AddDbContext<AppDBContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"));
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<CustomizeUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
     options.Password.RequireUppercase = false;
@@ -70,8 +70,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 {
     options.ValidationInterval = TimeSpan.FromMinutes(30);
-})
-
+});
 
 var app = builder.Build();
 
@@ -95,6 +94,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

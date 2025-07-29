@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Models
 {
-    public class AppDBContext : IdentityDbContext
+    public class AppDBContext : IdentityDbContext<CustomizeUser>
     {
         public AppDBContext()
         {

@@ -1,4 +1,5 @@
-﻿using Identity.ViewModels;
+﻿using Identity.Models;
+using Identity.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -9,10 +10,10 @@ namespace Identity.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<CustomizeUser> _userManager;
+        private readonly SignInManager<CustomizeUser> _signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<CustomizeUser> userManager, SignInManager<CustomizeUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -30,11 +31,12 @@ namespace Identity.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = new IdentityUser()
+            var user = new CustomizeUser()
             {
                 UserName = model.UserName,
                 Email = model.Email,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                Address = "Zahedan"
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

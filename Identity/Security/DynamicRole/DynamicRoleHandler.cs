@@ -15,11 +15,11 @@ namespace Identity.Security.DynamicRole
         private readonly IUtilities _utilities;
         private readonly IMemoryCache _memoryCache;
         private readonly IDataProtector _protectorToken;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<CustomizeUser> _signInManager;
+        private readonly UserManager<CustomizeUser> _userManager;
         private readonly AppDBContext _dbContext;
 
-        public DynamicRoleHandler(IHttpContextAccessor contextAccessor, IUtilities utilities, IMemoryCache memoryCache, IDataProtectionProvider dataProtectionProvider, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, AppDBContext appDbContext)
+        public DynamicRoleHandler(IHttpContextAccessor contextAccessor, IUtilities utilities, IMemoryCache memoryCache, IDataProtectionProvider dataProtectionProvider, SignInManager<CustomizeUser> signInManager, UserManager<CustomizeUser> userManager, AppDBContext appDbContext)
         {
             _contextAccessor = contextAccessor;
             _utilities = utilities;
