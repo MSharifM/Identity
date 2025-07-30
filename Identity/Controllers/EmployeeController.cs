@@ -1,4 +1,5 @@
-﻿using Identity.Models;
+﻿using Identity.Authorization.ClaimBasedAuthorization.Attributes;
+using Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ namespace Identity.Controllers
     //[Authorize(Policy ="EmployeeListPolicy")]
     //[Authorize(Policy = "ClaimOrRole")]
     //[Authorize(Policy = "ClaimRequirement")]
-    [Authorize(Policy = "DynamicRole")]
+    //[Authorize(Policy = "DynamicRole")]
     public class EmployeeController : Controller
     {
         private readonly AppDBContext _context;
@@ -21,6 +22,7 @@ namespace Identity.Controllers
             _context = context;
         }
 
+        [ClaimBasedAuthorization("EmployeeIndex")]
         // GET: Employee
         public async Task<IActionResult> Index()
         {
