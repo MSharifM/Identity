@@ -2,8 +2,10 @@
 
 namespace Identity.Repositories
 {
-    public class ClaimStore
+    public static class ClaimStore
     {
+        public const string UserAccess = nameof(UserAccess);
+
         public static List<Claim> AllClaims = new List<Claim>()
         {
             new Claim(ClaimTypesStore.EmployeeList,true.ToString()),
