@@ -9,15 +9,19 @@ namespace Identity.Authorization
     public class ClaimBasedAuthorizationHandler : AuthorizationHandler<ClaimBasedAuthorizationRequirement>
     {
         private readonly SignInManager<CustomizeUser> _signInManager;
+        private readonly IClaimBasedAuthorizationUtilities _utilities;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ClaimBasedAuthorizationHandler(SignInManager<CustomizeUser> signInManager)
+        public ClaimBasedAuthorizationHandler(SignInManager<CustomizeUser> signInManager, IClaimBasedAuthorizationUtilities utilities, IHttpContextAccessor httpContextAccessor)
         {
             _signInManager = signInManager;
+            _utilities = utilities;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ClaimBasedAuthorizationRequirement requirement)
         {
-            var claimToAuthorize = "temp";
+            var claimToAuthorize = _utilities.GetClaimToAuthorize(_httpContextAccessor.HttpContext);
 
             if (string.IsNullOrWhiteSpace(claimToAuthorize))
             {

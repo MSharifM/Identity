@@ -5,7 +5,7 @@ namespace Identity.Authorization.ClaimBasedAuthorization.Attributes
     [AttributeUsage(AttributeTargets.Method)]
     public class ClaimBasedAuthorizationAttribute : AuthorizeAttribute
     {
-        public ClaimBasedAuthorizationAttribute(string claimToAuthorize) : base("fake")
+        public ClaimBasedAuthorizationAttribute(string claimToAuthorize) : base("ClaimBasedAuthorization")
         {
             ClaimToAuthorize = claimToAuthorize;
         }

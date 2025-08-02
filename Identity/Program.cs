@@ -1,4 +1,5 @@
-﻿using Identity.Models;
+﻿using Identity.Authorization.ClaimBasedAuthorization;
+using Identity.Models;
 using Identity.Repositories;
 using Identity.Security.Default;
 using Identity.Security.DynamicRole;
@@ -60,6 +61,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddTransient<IUtilities, Utilities>();
 builder.Services.AddScoped<IAuthorizationHandler, DynamicRoleHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Login";
@@ -71,6 +73,8 @@ builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 {
     options.ValidationInterval = TimeSpan.FromMinutes(30);
 });
+
+builder.Services.AddClaimBasedAuthorization();
 
 var app = builder.Build();
 

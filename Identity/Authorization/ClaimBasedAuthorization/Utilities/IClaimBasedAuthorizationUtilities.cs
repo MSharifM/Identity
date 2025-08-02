@@ -2,6 +2,6 @@
 {
     public interface IClaimBasedAuthorizationUtilities
     {
-        string GetClaimToAuthorize(HttpContent httpContent);
+        string GetClaimToAuthorize(HttpContext httpContext);
     }
 }
