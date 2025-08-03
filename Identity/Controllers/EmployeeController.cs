@@ -1,4 +1,5 @@
 ﻿using Identity.Authorization.ClaimBasedAuthorization.Attributes;
+using Identity.Authorization.ClaimBasedAuthorization.MvcUserAccessClaims;
 using Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +23,14 @@ namespace Identity.Controllers
             _context = context;
         }
 
-        [ClaimBasedAuthorization("EmployeeIndex")]
+        [ClaimBasedAuthorization(EmployeeControllerClaimValue.EmployeeIndex)]
         // GET: Employee
         public async Task<IActionResult> Index()
         {
             return View(await _context.Employees.ToListAsync());
         }
 
+        [ClaimBasedAuthorization(EmployeeControllerClaimValue.EmployeeDetail)]
         // GET: Employee/Details/5
         public async Task<IActionResult> Details(int? id)
         {
