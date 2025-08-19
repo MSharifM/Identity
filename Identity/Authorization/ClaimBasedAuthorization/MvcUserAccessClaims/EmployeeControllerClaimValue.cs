@@ -10,7 +10,7 @@ namespace Identity.Authorization.ClaimBasedAuthorization.MvcUserAccessClaims
         public const string EmployeeDetail = nameof(EmployeeDetail);
         public const string EmployeeDetailPersian = "جزییات کارکنان";
 
-        public static ReadOnlyCollection<(string claimValueEnglish, string claimValuePersian)> AllClaimValues;
+        public readonly static ReadOnlyCollection<(string claimValueEnglish, string claimValuePersian)> AllClaimValues;
 
         static EmployeeControllerClaimValue()
         {

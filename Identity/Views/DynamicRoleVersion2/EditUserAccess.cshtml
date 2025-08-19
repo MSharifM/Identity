@@ -1,0 +1,27 @@
+﻿@model Identity.ViewModels.DynamicRoleVersion2.EditUserAccessViewModel
+
+@{
+    ViewData["Title"] = "CreateRole";
+}
+
+<h1>CreateRole</h1>
+<form asp-controller="DynamicRoleVersion2" asp-action="EditUserAccess" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <br />
+    <h2>نام کاربری : @Model.UserName</h2>
+    <br />
+
+    @for (int i = 0; i < Model.UserClaimValues.Count; i++)
+    {
+        <div class="form-group">
+            <input asp-for="UserClaimValues[i].IsSelected" />
+            <input type="hidden" readonly="readonly" asp-for="UserClaimValues[i].ClaimValue" />
+            <label asp-for="UserClaimValues[i].IsSelected">
+                @Model.UserClaimValues[i].ClaimValuePersian
+            </label>
+        </div>
+    }
+
+    <input hidden="" asp-for="UserId" />
+    <button type="submit">Submit</button>
+</form>
