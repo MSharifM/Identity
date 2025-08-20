@@ -26,8 +26,31 @@ namespace Identity.Controllers
             if (!await _userManager.Users.AnyAsync(u => u.Id == id))
                 return NotFound();
 
-            
-            return View();
+            var model = await PrepareEditUserAccessViewModelAsync(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUserAccess(EditUserAccessViewModel model)
+        {
+            if (!await _userManager.Users.AnyAsync(u => u.Id == model.UserId)) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                if (!IsEditUserAccessModelValid(model))
+                {
+                    model = await PrepareEditUserAccessViewModelAsync(model.UserId);
+                    ModelState.AddModelError("", "مقدایر دسترسی معتبر نمیباشد، لطفا این صفحه را دوباره باز بکنید.");
+                    return View(model);
+                }
+
+                await EditUserAccessInternalAsync(model);
+                await _userManager.UpdateSecurityStampAsync(await _userManager.FindByIdAsync(model.UserId));
+            }
+
+            model = await PrepareEditUserAccessViewModelAsync(model.UserId);
+            return View(model);
         }
 
         #region Helpers
@@ -58,6 +81,25 @@ namespace Identity.Controllers
             };
 
             return model;
+        }
+
+        private async Task EditUserAccessInternalAsync(EditUserAccessViewModel model)
+        {
+            var userClaims = await _dBContext.UserClaims
+                .Where(c => c.UserId == model.UserId && c.ClaimType == ClaimStore.UserAccess)
+                .ToListAsync();
+
+            _dBContext.UserClaims.RemoveRange(userClaims);
+
+            await _dBContext.UserClaims.AddRangeAsync(model.UserClaimValues.Where(c => c.IsSelected)
+                 .Select(c => new IdentityUserClaim<string>
+                 {
+                     UserId = model.UserId,
+                     ClaimType = ClaimStore.UserAccess,
+                     ClaimValue = c.ClaimValue
+                 }));
+
+            await _dBContext.SaveChangesAsync();
         }
 
         private bool IsEditUserAccessModelValid(EditUserAccessViewModel model)
