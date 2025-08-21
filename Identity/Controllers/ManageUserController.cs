@@ -1,6 +1,7 @@
 ﻿using Identity.Models;
 using Identity.Repositories;
 using Identity.ViewModels.ManageUser;
+using Kaktos.UserImmediateActions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,14 @@ namespace Identity.Controllers
         private readonly UserManager<CustomizeUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<CustomizeUser> _signInManager;
+        private readonly IUserImmediateActionsService _userImmediateActionsService;
 
-        public ManageUserController(UserManager<CustomizeUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<CustomizeUser> signInManager)
+        public ManageUserController(UserManager<CustomizeUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<CustomizeUser> signInManager, IUserImmediateActionsService userImmediateActionsService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _userImmediateActionsService = userImmediateActionsService;
         }
 
         [HttpGet]
@@ -97,7 +100,14 @@ namespace Identity.Controllers
                 .ToList();
             var result = await _userManager.AddToRolesAsync(user, requestRoles);
 
-            if (result.Succeeded) return RedirectToAction("index");
+            if (result.Succeeded)
+            {
+                await _userImmediateActionsService.RefreshCookieAsync(model.UserId);
+                await _userImmediateActionsService.SignOutAsync(model.UserId);
+                await _userManager.UpdateSecurityStampAsync(user);
+
+                return RedirectToAction("index");
+            }
 
             foreach (var error in result.Errors)
             {
@@ -118,7 +128,7 @@ namespace Identity.Controllers
             {
                 RoleName = r,
             }).ToList();
-            var model = new AddUserToRoleViewModel() { UserId = id , UserRoles = validRoles};
+            var model = new AddUserToRoleViewModel() { UserId = id, UserRoles = validRoles };
 
             return View(model);
         }
@@ -248,7 +258,7 @@ namespace Identity.Controllers
                 return NotFound();
 
             await _userManager.UpdateSecurityStampAsync(user);
-            return RedirectToAction("Index"); 
+            return RedirectToAction("Index");
         }
     }
 }

@@ -3,6 +3,7 @@ using Identity.Models;
 using Identity.Repositories;
 using Identity.Security.Default;
 using Identity.Security.DynamicRole;
+using Kaktos.UserImmediateActions.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -33,7 +34,8 @@ builder.Services.AddIdentity<CustomizeUser, IdentityRole>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
 })
     .AddEntityFrameworkStores<AppDBContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddUserImmediateActions();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -90,6 +92,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
+app.UseUserImmediateActions();
 app.UseAuthorization();
 
 app.MapStaticAssets();
