@@ -4,6 +4,7 @@ using Identity.Repositories;
 using Identity.Security.Default;
 using Identity.Security.DynamicRole;
 using Kaktos.UserImmediateActions.Extensions;
+using Kaktos.UserImmediateActions.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +36,8 @@ builder.Services.AddIdentity<CustomizeUser, IdentityRole>(options =>
 })
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders()
-    .AddUserImmediateActions();
+    .AddUserImmediateActions()
+    .AddPermanentImmediateActionsStore<IPermanentImmediateActionsStore>();
 
 builder.Services.AddAuthorization(options =>
 {

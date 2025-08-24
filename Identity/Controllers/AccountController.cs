@@ -36,7 +36,7 @@ namespace Identity.Controllers
                 UserName = model.UserName,
                 Email = model.Email,
                 EmailConfirmed = true,
-                Address = "Zahedan"
+                City = "Zahedan"
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

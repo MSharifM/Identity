@@ -4,6 +4,6 @@ namespace Identity.Models
 {
     public class CustomizeUser : IdentityUser
     {
-        public string Address { get; set; }
+        public string City { get; set; }
     }
 }
