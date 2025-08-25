@@ -1,5 +1,8 @@
 ﻿using Identity.Authorization.ClaimBasedAuthorization;
 using Identity.Models;
+using Identity.Quartz;
+using Identity.Quartz.JobFactories;
+using Identity.Quartz.Jobs;
 using Identity.Repositories;
 using Identity.Security.Default;
 using Identity.Security.DynamicRole;
@@ -10,6 +13,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Impl.AdoJobStore;
+using Quartz.Spi;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,6 +87,17 @@ builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 
 builder.Services.AddClaimBasedAuthorization();
 
+#region Qurtz
+
+builder.Services.AddSingleton<IJobFactory, SingletonJobFactory>();
+builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+builder.Services.AddHostedService<Identity.Quartz.QuartzHostedService>();
+builder.Services.AddSingleton<ImmediateActionsJob>();
+builder.Services.AddSingleton(new JobSchedule(
+    jobType: typeof(ImmediateActionsJob),
+    cronExpression: "0 0 0/6 1/1 * ? *"));
+
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
